@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do List App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #e0e0e0;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    .task-buttons {
+      float: right;
+    }
+    button {
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>To-Do List</h2>
+    <input id="taskInput" type="text" placeholder="Enter your task..." />
+    <input id="dueDate" type="date" />
+    <select id="priority">
+      <option value="Low">Low Priority</option>
+      <option value="Medium">Medium Priority</option>
+      <option value="High">High Priority</option>
+    </select>
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    let tasks = [];
+
+    function renderTasks() {
+      const list = document.getElementById("taskList");
+      list.innerHTML = "";
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${task.text}</strong> 
+          <em>[Due: ${task.dueDate || "No date"} | Priority: ${task.priority}]</em>
+          <span class="task-buttons">
+            <button onclick="editTask(${index})">Edit</button>
+            <button onclick="deleteTask(${index})">Delete</button>
+          </span>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const text = document.getElementById("taskInput").value;
+      const dueDate = document.getElementById("dueDate").value;
+      const priority = document.getElementById("priority").value;
+
+      if (!text.trim()) {
+        alert("Please enter a task.");
+        return;
+      }
+
+      tasks.push({ text, dueDate, priority });
+      renderTasks();
+      document.getElementById("taskInput").value = "";
+      document.getElementById("dueDate").value = "";
+      document.getElementById("priority").value = "Low";
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    function editTask(index) {
+      const newText = prompt("Edit task:", tasks[index].text);
+      if (newText !== null) {
+        tasks[index].text = newText;
+        renderTasks();
+      }
+    }
+  </script>
+</body>
+</html>
